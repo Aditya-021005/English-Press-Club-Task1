@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="styles.css" />
+  <title>Quiz Game</title>
+</head>
+<body>
+
+<!-- Player Registration Screen -->
+<div class="register-container" id="registerContainer">
+  <div class="header">ENGLISH PRESS CLUB</div>
+  <h1>Player Registration</h1>
+  <input type="text" id="player1" placeholder="Enter Player 1 Name" />
+  <input type="text" id="player2" placeholder="Enter Player 2 Name" />
+  <button onclick="startGame()">Start Game</button>
+</div>
+
+<!-- Quiz Screen -->
+<div class="quiz-container" id="quizContainer" style="display: none;">
+  <div class="header">ENGLISH PRESS CLUB</div>
+  <div class="player-info">
+    <div>Player 1: <span id="score1">0</span></div>
+    <div>Player 2: <span id="score2">0</span></div>
+  </div>
+  
+  <div class="turn-info">
+    Turn: <span id="currentPlayer">Player 1</span>
+  </div>
+
+  <div class="timer-container">
+    <div id="timer">30</div>
+  </div>
+
+  <div class="question" id="question">Question will appear here...</div>
+  
+  <div class="options">
+    <button class="option" onclick="checkAnswer('A')" id="optionA">A: </button>
+    <button class="option" onclick="checkAnswer('B')" id="optionB">B: </button>
+    <button class="option" onclick="checkAnswer('C')" id="optionC">C: </button>
+    <button class="option" onclick="checkAnswer('D')" id="optionD">D: </button>
+  </div>
+
+  <button class="next-btn" id="nextButton" onclick="nextQuestion()" disabled>Next</button>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
