@@ -5,6 +5,8 @@ let currentQuestionIndex = 0;
 let answered = false;
 let timer;
 let timeLeft = 30;
+const correctSound = new Audio ('correct-6033.mp3');
+const wrongSound = new Audio ('buzzer-or-wrong-answer-20582.mp3');
 
 const questionElement = document.getElementById('question');
 const options = {
@@ -39,7 +41,7 @@ const quizData = [
   },
 ];
 
-// Start game after player registration
+// Player registration
 function startGame() {
   player1 = document.getElementById('player1').value || 'Player 1';
   player2 = document.getElementById('player2').value || 'Player 2';
@@ -96,15 +98,19 @@ function handleTimeout() {
   const currentQuestion = quizData[currentQuestionIndex];
   options[currentQuestion.correct].classList.add('correct');
   
+  
   answered = true;
-  nextButton.disabled = false; // Enable "Next" button after timeout
+   // Enable "Next" button after timeout
 }
+
+// Handle answer selection
+let wrongAnswer = false; 
+nextButton.disabled = false;// Track if the answer was wrong
 
 // Handle answer selection
 function checkAnswer(answer) {
   if (answered) return; // Prevent multiple clicks
 
-  clearInterval(timer);
   const currentQuestion = quizData[currentQuestionIndex];
 
   if (answer === currentQuestion.correct) {
@@ -112,15 +118,29 @@ function checkAnswer(answer) {
     options[answer].classList.add('correct');
     score[currentPlayer - 1]++;
     updateScore();
-  } else {
+    clearInterval(timer); // Stop timer only for correct answers
+    correctSound.play();
+    wrongAnswer = false; // Reset wrong answer flag
+    nextButton.disabled = false; // Enable "Next" button
+  } 
+  
+  else {
     // Wrong answer
     options[answer].classList.add('wrong');
     options[currentQuestion.correct].classList.add('correct');
+    wrongSound.play();
+    wrongAnswer = true;
+    nextButton.disabled = false;
+    
   }
 
   answered = true;
-  nextButton.disabled = false; // Enable "Next" button
+   
 }
+
+
+
+
 
 // Update score display
 function updateScore() {
@@ -129,9 +149,13 @@ function updateScore() {
 }
 
 // Handle "Next" button click
+
 function nextQuestion() {
-  // Switch to next player
-  currentPlayer = currentPlayer === 1 ? 2 : 1;
+  if (!wrongAnswer) {
+    currentPlayer = currentPlayer === 1 ? 2 : 1;
+    currentQuestionIndex++;
+  }
+
   updatePlayerTurn();
 
   // Move to next question
@@ -143,6 +167,7 @@ function nextQuestion() {
     loadQuestion();
   }
 }
+
 
 // Update player turn display
 function updatePlayerTurn() {
