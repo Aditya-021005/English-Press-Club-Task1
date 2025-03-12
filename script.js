@@ -63,7 +63,7 @@ function startGame() {
   // ✅ Clear error if filled
   errorMessage.textContent = "";
 
-  // ✅ Start the game if validation passes
+  // ✅ Start the game if validation passe
   document.getElementById('registerContainer').style.display = 'none';
   document.getElementById('quizContainer').style.display = 'block';
 
