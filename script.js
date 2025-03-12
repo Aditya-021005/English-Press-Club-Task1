@@ -7,6 +7,9 @@ let timer;
 let timeLeft = 30;
 const correctSound = new Audio ('correct-6033.mp3');
 const wrongSound = new Audio ('buzzer-or-wrong-answer-20582.mp3');
+const winnerScreen = document.getElementById('winnerScreen');
+const winnerMessage = document.getElementById('winnerMessage');
+
 
 const questionElement = document.getElementById('question');
 const options = {
