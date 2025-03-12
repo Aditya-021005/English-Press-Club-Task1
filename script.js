@@ -45,10 +45,25 @@ const quizData = [
 ];
 
 // Player registration
+// ✅ Start Game with Validation
 function startGame() {
-  player1 = document.getElementById('player1').value || 'Player 1';
-  player2 = document.getElementById('player2').value || 'Player 2';
-  
+  const player1Input = document.getElementById('player1');
+  const player2Input = document.getElementById('player2');
+  const errorMessage = document.getElementById('errorMessage');
+
+  player1 = player1Input.value.trim(); // Remove whitespace
+  player2 = player2Input.value.trim();
+
+  // ✅ Check for empty fields
+  if (player1 === "" || player2 === "") {
+    errorMessage.textContent = "Both player names are required!";
+    return;
+  }
+
+  // ✅ Clear error if filled
+  errorMessage.textContent = "";
+
+  // ✅ Start the game if validation passes
   document.getElementById('registerContainer').style.display = 'none';
   document.getElementById('quizContainer').style.display = 'block';
 
