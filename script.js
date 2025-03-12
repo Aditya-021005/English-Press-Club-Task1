@@ -200,7 +200,6 @@ function endGame() {
     winnerMessage.textContent = winner;
     winnerScreen.classList.add('active'); // Fade in and display winning screen
 }
-
 // Reset Game
 function resetGame() {
     document.getElementById('winnerScreen').classList.remove('active'); // Hide winning screen
@@ -212,12 +211,12 @@ function resetGame() {
     answered = false;
     wrongAnswer = false;
 
-    // Clear previous answers
+    // Clear previous selections and styling
     clearSelection();
 
     nextButton.disabled = true; // Disable Next button initially
     updateScore();
-    loadQuestion();
+    loadQuestion(); // Ensure first question is fresh
 }
 
 // Clear styling for next question
