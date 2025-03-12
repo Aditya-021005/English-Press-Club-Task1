@@ -8,6 +8,8 @@ body {
   align-items: center;
   height: 100vh;
   margin: 0;
+  background: url('23982.jpg') no-repeat center center fixed;
+  background-size: cover;
 }
 /* Header Styling */
 .header {
