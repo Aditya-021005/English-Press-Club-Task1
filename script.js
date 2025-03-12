@@ -216,12 +216,41 @@ function resetGame() {
 
     nextButton.disabled = true; // Disable Next button initially
     updateScore();
-    loadQuestion(); // Ensure first question is fresh
+    loadQuestion(); // Load first question cleanly
 }
 
-// Clear styling for next question
+// Clear styling and reset button state for next question
 function clearSelection() {
     Object.values(options).forEach(option => {
         option.classList.remove('correct', 'wrong');
+        option.disabled = false; // Re-enable buttons
     });
 }
+
+// Handle answer selection
+function checkAnswer(answer) {
+    if (answered) return;
+
+    const currentQuestion = quizData[currentQuestionIndex];
+
+    if (answer === currentQuestion.correct) {
+        // Correct answer
+        options[answer].classList.add('correct');
+        score[currentPlayer - 1]++;
+        correctSound.play();
+        clearInterval(timer);
+        nextButton.disabled = false;
+    } else {
+        // Wrong answer
+        options[answer].classList.add('wrong');
+        options[currentQuestion.correct].classList.add('correct');
+        wrongSound.play();
+        nextButton.disabled = false;
+    }
+
+    // Disable further interaction after answer
+    Object.values(options).forEach(option => option.disabled = true);
+
+    answered = true;
+}
+
