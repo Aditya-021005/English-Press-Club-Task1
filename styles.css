@@ -388,7 +388,7 @@ body {
 }
 .register-container {
   backdrop-filter: blur(10px); 
-  background-color: rgba(75, 0, 130, 0.8); /* Purple with slight transparency */
+  background-color: rgba(75, 0, 130, 0.8); /* Purple with slight transparen */
 }
 /* ✅ Error Message Styling */
 .error-message {
