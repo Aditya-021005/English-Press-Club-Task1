@@ -210,8 +210,19 @@ function resetGame() {
     currentQuestionIndex = 0;
     currentPlayer = 1;
     answered = false;
+    wrongAnswer = false;
 
+    // Clear previous answers
+    clearSelection();
+
+    nextButton.disabled = true; // Disable Next button initially
     updateScore();
     loadQuestion();
 }
 
+// Clear styling for next question
+function clearSelection() {
+    Object.values(options).forEach(option => {
+        option.classList.remove('correct', 'wrong');
+    });
+}
