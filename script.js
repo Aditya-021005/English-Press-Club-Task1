@@ -182,30 +182,36 @@ function clearSelection() {
   });
 }
 
-// End game and show results
+// Show Winning Screen
 function endGame() {
-  let winner;
-  if (score[0] > score[1]) {
-    winner = `${player1} wins!`;
-  } else if (score[1] > score[0]) {
-    winner = `${player2} wins!`;
-  } else {
-    winner = "It's a tie!";
-  }
+    document.getElementById('quizContainer').style.display = 'none';
+    const winnerScreen = document.getElementById('winnerScreen');
+    const winnerMessage = document.getElementById('winnerMessage');
 
-  setTimeout(() => {
-    alert(`Game Over!\n${player1}: ${score[0]}\n${player2}: ${score[1]}\n${winner}`);
-    resetGame();
-  }, 500);
+    let winner;
+    if (score[0] > score[1]) {
+        winner = `${player1} wins!`;
+    } else if (score[1] > score[0]) {
+        winner = `${player2} wins!`;
+    } else {
+        winner = "It's a tie!";
+    }
+
+    winnerMessage.textContent = winner;
+    winnerScreen.classList.add('active'); // Fade in and display winning screen
 }
 
-// Reset game to start over
+// Reset Game
 function resetGame() {
-  score = [0, 0];
-  currentPlayer = 1;
-  currentQuestionIndex = 0;
+    document.getElementById('winnerScreen').classList.remove('active'); // Hide winning screen
+    document.getElementById('registerContainer').style.display = 'block';
 
-  updateScore();
-  updatePlayerTurn();
-  loadQuestion();
+    score = [0, 0];
+    currentQuestionIndex = 0;
+    currentPlayer = 1;
+    answered = false;
+
+    updateScore();
+    loadQuestion();
 }
+
