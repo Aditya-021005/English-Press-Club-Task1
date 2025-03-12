@@ -17,7 +17,7 @@ body {
   font-weight: bold;
   text-align: center;
   margin-bottom: 20px;
-  color: #ffd700; /* Gold color */
+  color: #ffcc00; /* Gold color */
   letter-spacing: 2px;
   text-transform: uppercase;
   position: relative;
@@ -365,11 +365,15 @@ body {
   border-radius: 5px;
   font-size: 16px;
   background-color: #32004b;
-  color: #ffffff;
+  color: #ddd;
   transition: border-color 0.3s;
 }
 
 .register-container input:focus {
   border-color: #ffd700;
+}
+.register-container {
+  backdrop-filter: blur(10px); 
+  background-color: rgba(75, 0, 130, 0.8); /* Purple with slight transparency */
 }
 
