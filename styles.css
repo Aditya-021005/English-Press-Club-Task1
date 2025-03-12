@@ -365,4 +365,19 @@ body {
 .play-again:hover {
   background-color: #8a2be2;
 }
+.register-container input {
+  width: 90%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 2px solid #6a0dad;
+  border-radius: 5px;
+  font-size: 16px;
+  background-color: #32004b;
+  color: #ffffff;
+  transition: border-color 0.3s;
+}
+
+.register-container input:focus {
+  border-color: #ffd700;
+}
 
