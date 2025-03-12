@@ -154,22 +154,23 @@ function updateScore() {
 // Handle "Next" button click
 
 function nextQuestion() {
-  if (!wrongAnswer) {
-    currentPlayer = currentPlayer === 1 ? 2 : 1;
-    currentQuestionIndex++;
-  }
+    if (!wrongAnswer) {
+        currentPlayer = currentPlayer === 1 ? 2 : 1;
+    }
 
-  updatePlayerTurn();
+    // ✅ Only increment once!
+    currentQuestionIndex++; 
+    
+    updatePlayerTurn();
 
-  // Move to next question
-  currentQuestionIndex++;
-  if (currentQuestionIndex >= quizData.length) {
-    endGame();
-  } else {
-    clearSelection();
-    loadQuestion();
-  }
+    if (currentQuestionIndex >= quizData.length) {
+        endGame();
+    } else {
+        clearSelection();
+        loadQuestion();
+    }
 }
+
 
 
 // Update player turn display
@@ -240,22 +241,23 @@ function checkAnswer(answer) {
     const currentQuestion = quizData[currentQuestionIndex];
 
     if (answer === currentQuestion.correct) {
-        // Correct answer
+        // ✅ Correct answer - update score
         options[answer].classList.add('correct');
-        score[currentPlayer - 1]++;
+        score[currentPlayer - 1]++; // ✅ Correctly increase score
         correctSound.play();
         clearInterval(timer);
         nextButton.disabled = false;
     } else {
-        // Wrong answer
+        // ✅ Wrong answer logic
         options[answer].classList.add('wrong');
         options[currentQuestion.correct].classList.add('correct');
         wrongSound.play();
         nextButton.disabled = false;
     }
 
-    // Disable further interaction after answer
+    // ✅ Disable buttons to prevent multiple clicks
     Object.values(options).forEach(option => option.disabled = true);
 
     answered = true;
+    updateScore(); // ✅ Ensure score is updated properly
 }
