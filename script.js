@@ -182,11 +182,9 @@ function clearSelection() {
   });
 }
 
-// Show Winning Screen
+// ✅ Show Winning Screen
 function endGame() {
     document.getElementById('quizContainer').style.display = 'none';
-    const winnerScreen = document.getElementById('winnerScreen');
-    const winnerMessage = document.getElementById('winnerMessage');
 
     let winner;
     if (score[0] > score[1]) {
@@ -197,9 +195,14 @@ function endGame() {
         winner = "It's a tie!";
     }
 
+    // Set winner message
     winnerMessage.textContent = winner;
-    winnerScreen.classList.add('active'); // Fade in and display winning screen
+
+    // Ensure display is set correctly
+    winnerScreen.style.display = 'block'; 
+    winnerScreen.classList.add('active'); // Activate visibility
 }
+
 // Reset Game
 function resetGame() {
     document.getElementById('winnerScreen').classList.remove('active'); // Hide winning screen
