@@ -5,9 +5,8 @@ let currentQuestionIndex = 0;
 let answered = false;
 let timer;
 let timeLeft = 30;
-
-const correctSound = new Audio('correct-6033.mp3');
-const wrongSound = new Audio('buzzer-or-wrong-answer-20582.mp3');
+const correctSound = new Audio ('correct-6033.mp3');
+const wrongSound = new Audio ('buzzer-or-wrong-answer-20582.mp3');
 
 const questionElement = document.getElementById('question');
 const options = {
@@ -18,10 +17,7 @@ const options = {
 };
 const timerElement = document.getElementById('timer');
 const nextButton = document.getElementById('nextButton');
-const winnerScreen = document.getElementById('winnerScreen');
-const winnerMessage = document.getElementById('winnerMessage');
 
-// Quiz Data
 const quizData = [
   {
     question: "What is the capital of France?",
@@ -45,19 +41,19 @@ const quizData = [
   },
 ];
 
-// ✅ Start Game
+// Player registration
 function startGame() {
   player1 = document.getElementById('player1').value || 'Player 1';
   player2 = document.getElementById('player2').value || 'Player 2';
-
+  
   document.getElementById('registerContainer').style.display = 'none';
   document.getElementById('quizContainer').style.display = 'block';
 
-  resetGameState(); // Reset game state before starting
+  updatePlayerTurn();
   loadQuestion();
 }
 
-// ✅ Load Question
+// Load question and answers
 function loadQuestion() {
   answered = false;
   nextButton.disabled = true;
@@ -72,26 +68,21 @@ function loadQuestion() {
   options.B.textContent = `B: ${currentQuestion.answers.B}`;
   options.C.textContent = `C: ${currentQuestion.answers.C}`;
   options.D.textContent = `D: ${currentQuestion.answers.D}`;
-
-  // Re-enable buttons for next round
-  Object.values(options).forEach(option => {
-    option.disabled = false;
-  });
 }
 
-// ✅ Reset Timer
+// Start the timer
 function resetTimer() {
   clearInterval(timer);
   timeLeft = 30;
   timerElement.textContent = timeLeft;
-  timerElement.style.color = '#00ff00';
+  timerElement.style.color = '#00ff00'; // Green color
 
   timer = setInterval(() => {
     timeLeft--;
     timerElement.textContent = timeLeft;
 
-    if (timeLeft <= 10) timerElement.style.color = '#ffff00';
-    if (timeLeft <= 5) timerElement.style.color = '#ff0000';
+    if (timeLeft <= 10) timerElement.style.color = '#ffff00'; // Yellow
+    if (timeLeft <= 5) timerElement.style.color = '#ff0000'; // Red
 
     if (timeLeft <= 0) {
       clearInterval(timer);
@@ -100,85 +91,75 @@ function resetTimer() {
   }, 1000);
 }
 
-// ✅ Handle Timeout
+// Handle timeout if player doesn't answer
 function handleTimeout() {
   if (answered) return;
-  
-  answered = true;
-
-  const correctAnswer = quizData[currentQuestionIndex].correct;
-  options[correctAnswer].classList.add('correct'); // Highlight correct answer
-
-  nextButton.disabled = false;
-}
-
-// ✅ Handle First Button (Positive)
-function handlePositive() {
-  if (answered) return;
-  answered = true;
-
-  correctSound.currentTime = 0;
-  correctSound.play();
-
-  // Check correct answer
-  checkAnswer(quizData[currentQuestionIndex].correct);
-
-  setTimeout(() => {
-    nextQuestion();
-    switchPlayer();
-  }, 1000);
-}
-
-// ✅ Handle Second Button (Negative)
-function handleNegative() {
-  if (answered) return;
-  answered = true;
-
-  wrongSound.currentTime = 0;
-  wrongSound.play();
-
-  // Pass invalid value to simulate wrong answer
-  checkAnswer('X');
-
-  setTimeout(() => {
-    answered = false;
-  }, 1000);
-}
-
-// ✅ Handle Answer Selection and Highlight Correct/Wrong
-function checkAnswer(answer) {
-  if (answered) return;
-  answered = true;
 
   const currentQuestion = quizData[currentQuestionIndex];
+  options[currentQuestion.correct].classList.add('correct');
   
-  if (answer === currentQuestion.correct) {
-    options[answer].classList.add('correct');
-    score[currentPlayer - 1]++;
-  } else {
-    options[answer]?.classList.add('wrong');
-    options[currentQuestion.correct].classList.add('correct');
-  }
-
-  updateScore();
-
-  // Disable all options after answering
-  Object.values(options).forEach(option => option.disabled = true);
-
-  nextButton.disabled = false;
+  
+  answered = true;
+   // Enable "Next" button after timeout
 }
 
-// ✅ Update Score
+// Handle answer selection
+let wrongAnswer = false; 
+nextButton.disabled = false;// Track if the answer was wrong
+
+// Handle answer selection
+function checkAnswer(answer) {
+  if (answered) return; // Prevent multiple clicks
+
+  const currentQuestion = quizData[currentQuestionIndex];
+
+  if (answer === currentQuestion.correct) {
+    // Correct answer
+    options[answer].classList.add('correct');
+    score[currentPlayer - 1]++;
+    updateScore();
+    clearInterval(timer); // Stop timer only for correct answers
+    correctSound.play();
+    wrongAnswer = false; // Reset wrong answer flag
+    nextButton.disabled = false; // Enable "Next" button
+  } 
+  
+  else {
+    // Wrong answer
+    options[answer].classList.add('wrong');
+    options[currentQuestion.correct].classList.add('correct');
+    wrongSound.play();
+    wrongAnswer = true;
+    nextButton.disabled = false;
+    
+  }
+
+  answered = true;
+   
+}
+
+
+
+
+
+// Update score display
 function updateScore() {
   document.getElementById('score1').textContent = score[0];
   document.getElementById('score2').textContent = score[1];
 }
 
-// ✅ Handle Next Question
-function nextQuestion() {
-  currentPlayer = currentPlayer === 1 ? 2 : 1;
-  currentQuestionIndex++;
+// Handle "Next" button click
 
+function nextQuestion() {
+  if (!wrongAnswer) {
+    currentPlayer = currentPlayer === 1 ? 2 : 1;
+    currentQuestionIndex++;
+  }
+
+  updatePlayerTurn();
+
+  // Move to next question
+  currentQuestionIndex++;
   if (currentQuestionIndex >= quizData.length) {
     endGame();
   } else {
@@ -187,60 +168,88 @@ function nextQuestion() {
   }
 }
 
-// ✅ Switch Player Turn
-function switchPlayer() {
-  currentPlayer = currentPlayer === 1 ? 2 : 1;
-  updatePlayerTurn();
-}
 
-// ✅ Clear Styling and Reset Button State
-function clearSelection() {
-  Object.values(options).forEach(option => {
-    option.classList.remove('correct', 'wrong');
-    option.disabled = false; // Reset button state
-  });
-}
-
-// ✅ Show Winning Screen
-function endGame() {
-  document.getElementById('quizContainer').style.display = 'none';
-  winnerScreen.style.display = 'block';
-
-  let winner;
-  if (score[0] > score[1]) {
-    winner = `${player1} wins!`;
-  } else if (score[1] > score[0]) {
-    winner = `${player2} wins!`;
-  } else {
-    winner = "It's a tie!";
-  }
-
-  winnerMessage.textContent = winner;
-}
-
-// ✅ Reset Game
-function resetGame() {
-  resetGameState();
-
-  // Hide winning screen and return to registration
-  winnerScreen.style.display = 'none';
-  document.getElementById('registerContainer').style.display = 'block';
-}
-
-// ✅ Reset Game State
-function resetGameState() {
-  score = [0, 0];
-  currentQuestionIndex = 0;
-  currentPlayer = 1;
-  answered = false;
-
-  updateScore();
-  clearSelection();
-  updatePlayerTurn();
-}
-
-// ✅ Update Player Turn
+// Update player turn display
 function updatePlayerTurn() {
   const currentPlayerName = currentPlayer === 1 ? player1 : player2;
   document.getElementById('currentPlayer').textContent = currentPlayerName;
+}
+
+// Clear styling for next question
+function clearSelection() {
+  Object.values(options).forEach(option => {
+    option.classList.remove('correct', 'wrong');
+  });
+}
+
+// Show Winning Screen
+function endGame() {
+    document.getElementById('quizContainer').style.display = 'none';
+    const winnerScreen = document.getElementById('winnerScreen');
+    const winnerMessage = document.getElementById('winnerMessage');
+
+    let winner;
+    if (score[0] > score[1]) {
+        winner = `${player1} wins!`;
+    } else if (score[1] > score[0]) {
+        winner = `${player2} wins!`;
+    } else {
+        winner = "It's a tie!";
+    }
+
+    winnerMessage.textContent = winner;
+    winnerScreen.classList.add('active'); // Fade in and display winning screen
+}
+// Reset Game
+function resetGame() {
+    document.getElementById('winnerScreen').classList.remove('active'); // Hide winning screen
+    document.getElementById('registerContainer').style.display = 'block';
+
+    score = [0, 0];
+    currentQuestionIndex = 0;
+    currentPlayer = 1;
+    answered = false;
+    wrongAnswer = false;
+
+    // Clear previous selections and styling
+    clearSelection();
+
+    nextButton.disabled = true; // Disable Next button initially
+    updateScore();
+    loadQuestion(); // Load first question cleanly
+}
+
+// Clear styling and reset button state for next question
+function clearSelection() {
+    Object.values(options).forEach(option => {
+        option.classList.remove('correct', 'wrong');
+        option.disabled = false; // Re-enable buttons
+    });
+}
+
+// Handle answer selection
+function checkAnswer(answer) {
+    if (answered) return;
+
+    const currentQuestion = quizData[currentQuestionIndex];
+
+    if (answer === currentQuestion.correct) {
+        // Correct answer
+        options[answer].classList.add('correct');
+        score[currentPlayer - 1]++;
+        correctSound.play();
+        clearInterval(timer);
+        nextButton.disabled = false;
+    } else {
+        // Wrong answer
+        options[answer].classList.add('wrong');
+        options[currentQuestion.correct].classList.add('correct');
+        wrongSound.play();
+        nextButton.disabled = false;
+    }
+
+    // Disable further interaction after answer
+    Object.values(options).forEach(option => option.disabled = true);
+
+    answered = true;
 }
