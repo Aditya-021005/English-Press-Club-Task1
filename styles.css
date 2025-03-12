@@ -390,4 +390,13 @@ body {
   backdrop-filter: blur(10px); 
   background-color: rgba(75, 0, 130, 0.8); /* Purple with slight transparency */
 }
+/* ✅ Error Message Styling */
+.error-message {
+  color: #ff4d4d;
+  font-size: 16px;
+  margin-top: 5px;
+  font-weight: bold;
+  height: 20px; /* Reserve space to prevent layout shift */
+  transition: opacity 0.3s ease;
+}
 
